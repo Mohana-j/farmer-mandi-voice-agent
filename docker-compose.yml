@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: farmer-mandi-voice-agent
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - ENVIRONMENT=production
+      - DATA_PROVIDER_MODE=synthetic
+      - DATABASE_URL=sqlite:////app/mandi_agent.db
+      - EXPORT_DIRECTORY=/app/exports
+      # Optional Gemini API key:
+      # - GEMINI_API_KEY=your_key_here
+    volumes:
+      - mandi-data:/app/backend/app/data
+      - mandi-exports:/app/exports
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  mandi-data:
+  mandi-exports:

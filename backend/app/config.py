@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Farmer Mandi Price Voice Agent"
     VERSION: str = "1.0.0"
 
+    # CORS settings: comma-separated list of allowed origins or "*"
+    CORS_ORIGINS: str = "*"
+
     # Database
     DATABASE_URL: str = "sqlite:///./mandi_agent.db"
 

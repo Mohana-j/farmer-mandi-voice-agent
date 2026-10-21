@@ -1,0 +1,35 @@
+# Render Blueprint Specification for Farmer Mandi Price Voice Agent Backend
+# Documentation: https://render.com/docs/blueprint-spec
+
+version: "1"
+
+services:
+  - type: web
+    name: farmer-mandi-voice-agent-backend
+    runtime: python
+    region: oregon
+    plan: free
+    branch: master
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "python -m uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: "/api/health"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: PYTHONPATH
+        value: .
+      - key: ENVIRONMENT
+        value: production
+      - key: DATA_PROVIDER_MODE
+        value: synthetic
+      - key: DATABASE_URL
+        value: sqlite:///./mandi_agent.db
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: EXPORT_DIRECTORY
+        value: ./exports
+      # Optional external services (Configure manually in Render Dashboard if available):
+      # - key: GEMINI_API_KEY
+      #   sync: false
+      # - key: LIVE_PORTAL_API_KEY
+      #   sync: false

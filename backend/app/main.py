@@ -47,11 +47,16 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS Middleware
+# Configure CORS for local and production deployment (Vercel, custom domains)
+raw_cors = settings.CORS_ORIGINS or "*"
+cors_origins = [orig.strip() for orig in raw_cors.split(",") if orig.strip()]
+is_wildcard = "*" in cors_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=cors_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app" if not is_wildcard else None,
+    allow_credentials=True if not is_wildcard else False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

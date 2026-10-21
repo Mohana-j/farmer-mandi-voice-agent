@@ -10,7 +10,11 @@ import {
   TestCaseResult,
 } from '../types';
 
-const API_BASE = '/api';
+// Production / Development API URL configuration
+// In production on Vercel, set VITE_API_URL to your Render backend (e.g., https://farmer-mandi-agent.onrender.com)
+// In local development, leaving VITE_API_URL empty routes through the Vite proxy to http://localhost:8000
+const rawBaseUrl = (import.meta.env.VITE_API_URL as string | undefined) || '';
+export const API_BASE = rawBaseUrl ? `${rawBaseUrl.replace(/\/+$/, '')}/api` : '/api';
 
 export const api = {
   // System config & health
